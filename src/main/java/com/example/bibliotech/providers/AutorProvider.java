@@ -68,5 +68,15 @@ public class AutorProvider implements IGenericDao<Autor>{
         
     }
 
+    public Autor getOneByName(String nome) {
+        
+        var autor = this.autorRepository.findByNome(nome);
+        if(autor.isEmpty()){
+            throw new Error("Autor não existe");
+        }
+        return autor.get();
+        
+    }
+
     
 }

@@ -17,13 +17,14 @@ import com.example.bibliotech.dtos.livro.UpdateLivroDto;
 import com.example.bibliotech.models.Livro;
 import com.example.bibliotech.models.Titulo;
 import com.example.bibliotech.services.AreaService;
+import com.example.bibliotech.services.AutorService;
 import com.example.bibliotech.services.LivroService;
 import com.example.bibliotech.services.TituloService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/Livro")
+@RequestMapping("/v1/livro")
 public class LivroController  {
  
     @Autowired
@@ -35,6 +36,9 @@ public class LivroController  {
     @Autowired
     AreaService areaService;
 
+    @Autowired
+    AutorService autorService;
+
     @SuppressWarnings("rawtypes")
     @PostMapping()
     public ResponseEntity create(
@@ -42,8 +46,20 @@ public class LivroController  {
     ){
         try {
 
+            var autor = this.autorService.getAutorByNome(body.nomeAutor());
+            if(autor == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Autor não existe"
+                );
+            }
+
             var area = this.areaService.getAreaById(body.areaId());
-            var titulo = new Titulo(body.nome(), body.prazo(), body.isbn(), body.edicao(), body.ano(), area );
+            if(area == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Area não existe"
+                );
+            }
+            var titulo = new Titulo(body.nome(), body.prazo(), body.isbn(), body.edicao(), body.ano(), area, autor );
             this.tituloService.executeVoidFunctions("create", 0, titulo);
 
             this.livroService.executeVoidFunctions("create", 0, 

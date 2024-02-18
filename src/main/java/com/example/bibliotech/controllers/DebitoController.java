@@ -1,6 +1,6 @@
 package com.example.bibliotech.controllers;
 
-import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,29 +14,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bibliotech.dtos.autor.CreateAutorDto;
-import com.example.bibliotech.models.Autor;
-import com.example.bibliotech.models.Titulo;
-import com.example.bibliotech.services.AutorService;
+import com.example.bibliotech.dtos.debito.CreateDebitoDto;
+import com.example.bibliotech.models.Debito;
+import com.example.bibliotech.services.AlunoService;
+import com.example.bibliotech.services.DebitoService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/autor")
-public class AutorController  {
+@RequestMapping("/v1/debito")
+public class DebitoController  {
  
     @Autowired
-    AutorService autorService;
+    DebitoService debitoService;
+
+    @Autowired
+    AlunoService alunoService;
 
     @SuppressWarnings("rawtypes")
     @PostMapping()
     public ResponseEntity create(
-        @RequestBody @Valid CreateAutorDto body
+        @RequestBody @Valid CreateDebitoDto body
     ){
         try {
 
-            this.autorService.executeVoidFunctions("create", 0, 
-            new Autor(body.nome(), body.sobrenome(), body.titulacao(), new ArrayList<Titulo>()));
+            var aluno = this.alunoService.getAlunoById(body.matricula());
+            if(aluno == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Aluno não existe"
+                );
+            }
+
+            System.out.println("chegou");
+            this.debitoService.executeVoidFunctions("create", 0, 
+            new Debito(
+                body.valor(), body.dataDebito(), aluno
+            ));
     
             return ResponseEntity.ok("Criado");
     
@@ -54,13 +67,13 @@ public class AutorController  {
     @SuppressWarnings("rawtypes")
     @PatchMapping("{id}")
     public ResponseEntity update(@PathVariable(value = "id") int id,
-        @RequestBody @Valid CreateAutorDto body
+        @RequestBody @Valid CreateDebitoDto body
     ){
 
         try {
 
-            this.autorService.executeVoidFunctions("update", id, 
-            new Autor(body.nome(), body.sobrenome(), body.titulacao()));
+            this.debitoService.executeVoidFunctions("update", id, 
+            new Debito(body.valor(), new Date()));
     
             return ResponseEntity.ok("Ok");
             
@@ -80,10 +93,10 @@ public class AutorController  {
 
         try {
 
-            this.autorService.executeVoidFunctions("delete", id, 
-            new Autor());
+            this.debitoService.executeVoidFunctions("delete", id, 
+            new Debito());
     
-            return ResponseEntity.ok("Autor excluido");
+            return ResponseEntity.ok("Debito excluido");
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -101,8 +114,8 @@ public class AutorController  {
 
         try {
 
-            var autor = this.autorService.getAutorById(id);
-            return ResponseEntity.ok(autor);
+            var debito = this.debitoService.getDebitoById(id);
+            return ResponseEntity.ok(debito);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -116,12 +129,12 @@ public class AutorController  {
     
     @SuppressWarnings("rawtypes")
     @GetMapping("")
-    public ResponseEntity getAutors(){
+    public ResponseEntity getDebitos(){
 
         try {
 
-            var autors = this.autorService.getAllAutors();
-            return ResponseEntity.ok(autors);
+            var debitos = this.debitoService.getAllDebitos();
+            return ResponseEntity.ok(debitos);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -9,5 +9,6 @@ public record CreateLivroDto(
     int edicao,
     int prazo,
     String nome,
-    int areaId
+    int areaId,
+    String nomeAutor
 ) {}

@@ -31,7 +31,7 @@ public class AlunoController  {
         @RequestBody @Valid CreateAlunoDto body
     ){
         try {
-
+            System.out.println("chegou");
             this.alunoService.executeVoidFunctions("create", 0, 
             new Aluno(body.nome(), body.cpf(), body.endereco()));
     

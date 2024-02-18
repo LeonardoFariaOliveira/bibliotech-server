@@ -68,6 +68,11 @@ public class AutorService{
     public Autor getAutorById(int id){
         return this.autorProvider.getOneById(id);
     }
+
+    public Autor getAutorByNome(String nome){
+        return this.autorProvider.getOneByName(nome);
+    }
+    
     
 
 }

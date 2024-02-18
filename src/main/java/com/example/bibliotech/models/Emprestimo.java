@@ -29,6 +29,14 @@ public class Emprestimo {
         this.multa = multa;
     }
 
+    public Emprestimo(Date dataEmprestimo, double multa, Aluno aluno, ArrayList<ItemEmprestimo> itensEmprestimo, Devolucao devolucao) {
+        this.dataEmprestimo = dataEmprestimo;
+        this.multa = multa;
+        this.aluno = aluno;
+        this.itensEmprestimo = itensEmprestimo;
+        this.devolucao = devolucao;
+    }
+
     public Emprestimo() {
         this.dataEmprestimo = new Date();
         this.multa = 0;
@@ -47,7 +55,7 @@ public class Emprestimo {
     private Aluno aluno = new Aluno();
 
     @OneToMany(mappedBy = "emprestimo", fetch = FetchType.LAZY, orphanRemoval = false)
-    private List<ItemEmprestimo> itensDevolucao = new ArrayList<>();
+    private List<ItemEmprestimo> itensEmprestimo = new ArrayList<>();
 
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -87,11 +95,11 @@ public class Emprestimo {
     }
 
     public List<ItemEmprestimo> getItensDevolucao() {
-        return itensDevolucao;
+        return itensEmprestimo;
     }
 
-    public void setItensDevolucao(List<ItemEmprestimo> itensDevolucao) {
-        this.itensDevolucao = itensDevolucao;
+    public void setItensDevolucao(List<ItemEmprestimo> itensEmprestimo) {
+        this.itensEmprestimo = itensEmprestimo;
     }
 
     

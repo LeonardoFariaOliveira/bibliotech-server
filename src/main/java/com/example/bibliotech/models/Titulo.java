@@ -34,6 +34,16 @@ public class Titulo {
         this.area = area;
     }
 
+    public Titulo(String nome, int prazo, String isbn, int edicao, int ano, Area area, Autor autor) {
+        this.nome = nome;
+        this.prazo = prazo;
+        this.isbn = isbn;
+        this.edicao = edicao;
+        this.ano = ano;
+        this.area = area;
+        this.autor = autor;
+    }   
+
     public Titulo(String nome, int prazo, String isbn, int edicao, int ano) {
         this.nome = nome;
         this.prazo = prazo;
@@ -70,9 +80,11 @@ public class Titulo {
     @JoinColumn(name = "area.id")
     private Area area = new Area();
     
+    @JsonIgnore
     @OneToMany(mappedBy = "titulo", orphanRemoval = false)
     private List<Livro> livros = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor.id")
     private Autor autor = new Autor();

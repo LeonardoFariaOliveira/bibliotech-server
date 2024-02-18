@@ -60,6 +60,14 @@ public class Devolucao {
         this.atraso = atraso;
     }
 
+    public Devolucao(Date dataDevolucao, double valorTotal, double multa, int atraso, Emprestimo empresimo) {
+        this.dataDevolucao = dataDevolucao;
+        this.valorTotal = valorTotal;
+        this.multa = multa;
+        this.atraso = atraso;
+        this.emprestimo = empresimo;
+    }
+
     public Devolucao() {
         this.id = 0;
         this.dataDevolucao = new Date();

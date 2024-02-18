@@ -24,6 +24,12 @@ public class Debito {
         this.data = data;
     }
 
+    public Debito(double valor, Date data, Aluno aluno) {
+        this.valor = valor;
+        this.data = data;
+        this.aluno = aluno;
+    }
+
     public Debito() {
         this.id = 0;
         this.valor = 0.0;

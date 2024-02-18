@@ -1,7 +1,5 @@
 package com.example.bibliotech.controllers;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,29 +12,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bibliotech.dtos.autor.CreateAutorDto;
-import com.example.bibliotech.models.Autor;
-import com.example.bibliotech.models.Titulo;
-import com.example.bibliotech.services.AutorService;
+import com.example.bibliotech.dtos.devolucao.CreateDevolucaoDto;
+import com.example.bibliotech.dtos.devolucao.UpdateDevolucaoDto;
+import com.example.bibliotech.models.Devolucao;
+import com.example.bibliotech.services.DevolucaoService;
+import com.example.bibliotech.services.EmprestimoService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/autor")
-public class AutorController  {
+@RequestMapping("/v1/devolucao")
+public class DevolucaoController  {
  
     @Autowired
-    AutorService autorService;
+    DevolucaoService devolucaoService;
+
+    @Autowired
+    EmprestimoService emprestimoService;
 
     @SuppressWarnings("rawtypes")
     @PostMapping()
     public ResponseEntity create(
-        @RequestBody @Valid CreateAutorDto body
+        @RequestBody @Valid CreateDevolucaoDto body
     ){
         try {
 
-            this.autorService.executeVoidFunctions("create", 0, 
-            new Autor(body.nome(), body.sobrenome(), body.titulacao(), new ArrayList<Titulo>()));
+            var emprestimo = this.emprestimoService.getEmprestimoById(body.idEmprestimo());
+            if(emprestimo == null){
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Emprestimo não existe"
+                );
+            
+            }
+
+            System.out.println("chegou");
+            this.devolucaoService.executeVoidFunctions("create", 0, 
+            new Devolucao(
+                body.dataDevolucao(),
+                body.valorTotal(),
+                0.0,
+                0,
+                emprestimo
+            ));
     
             return ResponseEntity.ok("Criado");
     
@@ -54,13 +72,18 @@ public class AutorController  {
     @SuppressWarnings("rawtypes")
     @PatchMapping("{id}")
     public ResponseEntity update(@PathVariable(value = "id") int id,
-        @RequestBody @Valid CreateAutorDto body
+        @RequestBody @Valid UpdateDevolucaoDto body
     ){
 
         try {
 
-            this.autorService.executeVoidFunctions("update", id, 
-            new Autor(body.nome(), body.sobrenome(), body.titulacao()));
+            this.devolucaoService.executeVoidFunctions("update", id, 
+            new Devolucao(
+                body.dataDevolucao(),
+                body.valorTotal(),
+                body.multa(),
+                body.atraso()
+            ));
     
             return ResponseEntity.ok("Ok");
             
@@ -80,10 +103,10 @@ public class AutorController  {
 
         try {
 
-            this.autorService.executeVoidFunctions("delete", id, 
-            new Autor());
+            this.devolucaoService.executeVoidFunctions("delete", id, 
+            new Devolucao());
     
-            return ResponseEntity.ok("Autor excluido");
+            return ResponseEntity.ok("Devolucao excluido");
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -101,8 +124,8 @@ public class AutorController  {
 
         try {
 
-            var autor = this.autorService.getAutorById(id);
-            return ResponseEntity.ok(autor);
+            var devolucao = this.devolucaoService.getDevolucaoById(id);
+            return ResponseEntity.ok(devolucao);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -116,12 +139,12 @@ public class AutorController  {
     
     @SuppressWarnings("rawtypes")
     @GetMapping("")
-    public ResponseEntity getAutors(){
+    public ResponseEntity getDevolucaos(){
 
         try {
 
-            var autors = this.autorService.getAllAutors();
-            return ResponseEntity.ok(autors);
+            var devolucoes = this.devolucaoService.getAllDevolucaos();
+            return ResponseEntity.ok(devolucoes);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

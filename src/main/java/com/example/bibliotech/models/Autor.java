@@ -7,10 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames={"name"}))
 public class Autor {
 
     public Autor(int id, String nome, String sobrenome, String titulacao) {
@@ -24,6 +28,13 @@ public class Autor {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.titulacao = titulacao;
+    }
+
+    public Autor(String nome, String sobrenome, String titulacao, ArrayList<Titulo> titulos) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.titulacao = titulacao;
+        this.titulos = titulos;
     }
 
     public Autor() {
@@ -43,7 +54,8 @@ public class Autor {
 
     private String titulacao;
 
-    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY, orphanRemoval = false)
+    @Column(nullable=true) 
+    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY )
     private List<Titulo> titulos = new ArrayList<>();
 
     public int getId() {
