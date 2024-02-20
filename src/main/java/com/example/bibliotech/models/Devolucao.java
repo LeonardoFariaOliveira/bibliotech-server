@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,10 +32,12 @@ public class Devolucao {
 
     private int atraso;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id")
     private Emprestimo emprestimo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "devolucao", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<ItemDevolucao> itensDevolucao = new ArrayList<>();
 

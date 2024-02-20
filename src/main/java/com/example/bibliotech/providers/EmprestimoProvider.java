@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.bibliotech.interfaces.IGenericDao;
+import com.example.bibliotech.models.Aluno;
 import com.example.bibliotech.models.Emprestimo;
 import com.example.bibliotech.repositories.EmprestimoRepository;
 
@@ -26,7 +27,11 @@ public class EmprestimoProvider implements IGenericDao<Emprestimo>{
 
     @Override
     public List<Emprestimo> getAll() {
-        return this.emprestimoRepository.findAll();
+        return this.emprestimoRepository.findByOrderByDataEmprestimoDesc();
+    }
+
+    public List<Emprestimo> getAllByAluno(Aluno aluno) {
+        return this.emprestimoRepository.findByAluno(aluno);
     }
 
     @Override

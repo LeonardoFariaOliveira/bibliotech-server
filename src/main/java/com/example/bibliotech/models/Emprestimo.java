@@ -3,6 +3,9 @@ package com.example.bibliotech.models;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +40,15 @@ public class Emprestimo {
         this.devolucao = devolucao;
     }
 
+    public Emprestimo(int idEmprestimo, Date dataEmprestimo, double multa, Aluno aluno, ArrayList<ItemEmprestimo> itensEmprestimo, Devolucao devolucao) {
+        this.idEmprestimo = idEmprestimo;
+        this.dataEmprestimo = dataEmprestimo;
+        this.multa = multa;
+        this.aluno = aluno;
+        this.itensEmprestimo = itensEmprestimo;
+        this.devolucao = devolucao;
+    }
+
     public Emprestimo() {
         this.dataEmprestimo = new Date();
         this.multa = 0;
@@ -50,14 +62,16 @@ public class Emprestimo {
 
     private double multa;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aluno.id")
     private Aluno aluno = new Aluno();
 
-    @OneToMany(mappedBy = "emprestimo", fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToMany(mappedBy = "emprestimo", fetch = FetchType.LAZY, orphanRemoval = false, cascade = CascadeType.ALL)
     private List<ItemEmprestimo> itensEmprestimo = new ArrayList<>();
 
 
+    
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id")
     private Devolucao devolucao;

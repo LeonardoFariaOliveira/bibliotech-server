@@ -1,7 +1,6 @@
 package com.example.bibliotech.controllers;
 
 import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +12,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.bibliotech.dtos.emprestimo.CreateEmprestimoDto;
 import com.example.bibliotech.dtos.emprestimo.UpdateEmprestimoDto;
 import com.example.bibliotech.models.Devolucao;
 import com.example.bibliotech.models.Emprestimo;
+import com.example.bibliotech.models.ItemEmprestimo;
 import com.example.bibliotech.services.AlunoService;
 import com.example.bibliotech.services.DebitoService;
 import com.example.bibliotech.services.EmprestimoService;
+import com.example.bibliotech.services.ItemEmprestimoService;
+import com.example.bibliotech.services.LivroService;
 
 import jakarta.validation.Valid;
 
@@ -37,6 +38,13 @@ public class EmprestimoController  {
     @Autowired
     DebitoService debitoService;
 
+    @Autowired
+    ItemEmprestimoService itemEmprestimoService;
+
+    
+    @Autowired
+    LivroService livroService;
+
     @SuppressWarnings("rawtypes")
     @PostMapping()
     public ResponseEntity create(
@@ -44,6 +52,8 @@ public class EmprestimoController  {
     ){
         try {
 
+            var itensEmprestimo = body.itensEmprestimo();
+            
             var aluno = this.alunoService.getAlunoById(body.matricula());
             if(aluno == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -51,20 +61,23 @@ public class EmprestimoController  {
                 );
             }
 
-            var debito = this.debitoService.getDebitoByAluno(aluno);
+            // var debito = this.debitoService.getDebitoByAluno(aluno);
 
-            if(!(debito == null)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    "Aluno não pode emprestar pois possui debitos"
-                );
-            }
+            // if(!(debito == null)){
+            //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+            //         "Aluno não pode emprestar pois possui debitos"
+            //     );
+            // }
+
+            // System.out.println(body.itensEmprestimo().get(0).getDataDevolucao());
 
             this.emprestimoService.executeVoidFunctions("create", 0, 
             new Emprestimo(
+                88,
                 new Date(),
                 0.0,
                 aluno,
-                body.itensEmprestimo(),
+                itensEmprestimo,
                 new Devolucao(
                     body.dataDevolucao(),
                     body.valorTotal(),
@@ -72,7 +85,21 @@ public class EmprestimoController  {
                     0
                 )
             ));
-    
+
+            var emprestimos = this.emprestimoService.getAllEmprestimos();
+            // emprestimos.get(0).getIdEmprestimo());
+            System.out.println("to aq");
+            for (ItemEmprestimo item : itensEmprestimo) {
+                var livro = this.livroService.getLivroById(item.getLivro().getId());
+                System.out.println("opa");
+                this.itemEmprestimoService.executeVoidFunctions("create", 0, new ItemEmprestimo(
+                    item.getDataDevolucao(),
+                    item.getDataPrevista(),
+                    emprestimos.get(0),
+                    livro
+                ));
+            }
+
             return ResponseEntity.ok("Criado");
     
             
@@ -138,6 +165,28 @@ public class EmprestimoController  {
 
             var emprestimo = this.emprestimoService.getEmprestimoById(id);
             return ResponseEntity.ok(emprestimo);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    e
+            );
+        }
+
+
+    }
+    
+
+    @SuppressWarnings("rawtypes")
+    @GetMapping("/matricula/{matricula}")
+    public ResponseEntity getByAluno(@PathVariable(value = "matricula") int matricula
+    ){
+
+        try {
+
+            var aluno = this.alunoService.getAlunoById(matricula);
+
+            var emprestimos = this.emprestimoService.getEmprestimosByAluno(aluno);
+            return ResponseEntity.ok(emprestimos);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,16 +45,20 @@ public class Livro {
 
     private Date dataPrevista;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "titulo.id")
     private Titulo titulo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "livro", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<Reserva> reservas = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "livro", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<ItemEmprestimo> itensEmprestimo = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "livro", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<ItemDevolucao> itensDevolucao = new ArrayList<>();
 

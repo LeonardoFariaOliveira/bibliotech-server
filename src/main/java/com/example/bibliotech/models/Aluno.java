@@ -3,6 +3,7 @@ package com.example.bibliotech.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -47,12 +48,15 @@ public class Aluno {
 
     private String endereco;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<Debito> debitos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY, orphanRemoval = false)
+    @JsonIgnore
+    @OneToMany(mappedBy = "aluno")
     private List<Emprestimo> emprestimos = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<Reserva> reservas = new ArrayList<>();
 

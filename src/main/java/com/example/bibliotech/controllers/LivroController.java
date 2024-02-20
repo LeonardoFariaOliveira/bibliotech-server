@@ -1,5 +1,7 @@
 package com.example.bibliotech.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bibliotech.dtos.livro.CreateLivroDto;
 import com.example.bibliotech.dtos.livro.UpdateLivroDto;
+import com.example.bibliotech.models.Autor;
 import com.example.bibliotech.models.Livro;
 import com.example.bibliotech.models.Titulo;
 import com.example.bibliotech.services.AreaService;
@@ -48,10 +51,9 @@ public class LivroController  {
 
             var autor = this.autorService.getAutorByNome(body.nomeAutor());
             if(autor == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    "Autor não existe"
-                );
+                autor = new Autor(body.nomeAutor(), " ", "mestre", new ArrayList<Titulo>());
             }
+            this.autorService.executeVoidFunctions("create", 0, autor);
 
             var area = this.areaService.getAreaById(body.areaId());
             if(area == null){

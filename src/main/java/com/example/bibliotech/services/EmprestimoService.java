@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.bibliotech.commands.emprestimo.CreateEmprestimo;
 import com.example.bibliotech.commands.emprestimo.DeleteEmprestimo;
 import com.example.bibliotech.commands.emprestimo.UpdateEmprestimo;
+import com.example.bibliotech.models.Aluno;
 import com.example.bibliotech.models.Emprestimo;
 import com.example.bibliotech.observables.ErrorObservable;
 import com.example.bibliotech.providers.EmprestimoProvider;
@@ -67,6 +68,10 @@ public class EmprestimoService{
 
     public Emprestimo getEmprestimoById(int id){
         return this.emprestimoProvider.getOneById(id);
+    }
+
+    public List<Emprestimo> getEmprestimosByAluno(Aluno aluno){
+        return this.emprestimoProvider.getAllByAluno(aluno);
     }
     
 

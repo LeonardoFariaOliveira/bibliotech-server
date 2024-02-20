@@ -2,6 +2,8 @@ package com.example.bibliotech.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,13 @@ public class ItemEmprestimo {
         this.dataPrevista = dataPrevista;
     }
 
+    public ItemEmprestimo(Date dataDevolucao, Date dataPrevista, Emprestimo emprestimo, Livro livro) {
+        this.dataDevolucao = dataDevolucao;
+        this.dataPrevista = dataPrevista;
+        this.emprestimo = emprestimo;
+        this.livro = livro;
+    }
+
     
     public ItemEmprestimo() {
         this.id = 0;
@@ -42,10 +51,12 @@ public class ItemEmprestimo {
 
     private Date dataPrevista;
 
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "livro.id")
     private Livro livro = new Livro();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emprestimo.id")
     private Emprestimo emprestimo = new Emprestimo();
