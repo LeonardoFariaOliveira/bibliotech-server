@@ -71,6 +71,9 @@ public class DebitoProvider implements IGenericDao<Debito>{
     public Debito getOneByAluno(Aluno aluno) {
         
         var debito = this.debitoRepository.findByAluno(aluno);
+        if(debito.isEmpty()){
+            return null;
+        }
         return debito.get();
         
     }

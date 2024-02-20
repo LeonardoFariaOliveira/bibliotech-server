@@ -40,12 +40,11 @@ public class Emprestimo {
         this.devolucao = devolucao;
     }
 
-    public Emprestimo(int idEmprestimo, Date dataEmprestimo, double multa, Aluno aluno, ArrayList<ItemEmprestimo> itensEmprestimo, Devolucao devolucao) {
+    public Emprestimo(int idEmprestimo, Date dataEmprestimo, double multa, Aluno aluno, Devolucao devolucao) {
         this.idEmprestimo = idEmprestimo;
         this.dataEmprestimo = dataEmprestimo;
         this.multa = multa;
         this.aluno = aluno;
-        this.itensEmprestimo = itensEmprestimo;
         this.devolucao = devolucao;
     }
 

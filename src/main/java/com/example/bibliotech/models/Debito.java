@@ -1,6 +1,9 @@
 package com.example.bibliotech.models;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,6 +47,7 @@ public class Debito {
 
     private Date data;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aluno.id")
     private Aluno aluno = new Aluno();

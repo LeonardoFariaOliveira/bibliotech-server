@@ -48,7 +48,7 @@ public class Aluno {
 
     private String endereco;
 
-    @JsonIgnore
+ 
     @OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY, orphanRemoval = false)
     private List<Debito> debitos = new ArrayList<>();
 

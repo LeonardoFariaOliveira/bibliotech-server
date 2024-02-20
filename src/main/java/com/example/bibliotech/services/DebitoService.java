@@ -26,7 +26,7 @@ public class DebitoService{
     DeleteDebito deleteDebito;
 
     @Autowired
-    DebitoProvider DebitoProvider;
+    DebitoProvider debitoProvider;
 
     @SuppressWarnings("deprecation")
     public void executeVoidFunctions(String action, int id, Debito debito){
@@ -63,15 +63,15 @@ public class DebitoService{
     }
 
     public List<Debito> getAllDebitos(){
-        return this.DebitoProvider.getAll();
+        return this.debitoProvider.getAll();
     }
 
     public Debito getDebitoById(int id){
-        return this.DebitoProvider.getOneById(id);
+        return this.debitoProvider.getOneById(id);
     }
 
     public Debito getDebitoByAluno(Aluno aluno){
-        return this.DebitoProvider.getOneByAluno(aluno);
+        return this.debitoProvider.getOneByAluno(aluno);
     }
     
 

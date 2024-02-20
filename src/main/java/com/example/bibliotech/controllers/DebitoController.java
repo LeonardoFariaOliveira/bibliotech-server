@@ -45,10 +45,10 @@ public class DebitoController  {
                 );
             }
 
-            System.out.println("chegou");
+    
             this.debitoService.executeVoidFunctions("create", 0, 
             new Debito(
-                body.valor(), body.dataDebito(), aluno
+                body.valor(), new Date(), aluno
             ));
     
             return ResponseEntity.ok("Criado");

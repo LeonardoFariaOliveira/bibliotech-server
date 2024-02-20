@@ -61,15 +61,15 @@ public class EmprestimoController  {
                 );
             }
 
-            // var debito = this.debitoService.getDebitoByAluno(aluno);
+            var debito = this.debitoService.getDebitoByAluno(aluno);
 
-            // if(!(debito == null)){
-            //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            //         "Aluno não pode emprestar pois possui debitos"
-            //     );
-            // }
+            if(!(debito == null)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Aluno não pode emprestar pois possui debitos"
+                );
+            }
 
-            // System.out.println(body.itensEmprestimo().get(0).getDataDevolucao());
+            
 
             this.emprestimoService.executeVoidFunctions("create", 0, 
             new Emprestimo(
@@ -77,7 +77,6 @@ public class EmprestimoController  {
                 new Date(),
                 0.0,
                 aluno,
-                itensEmprestimo,
                 new Devolucao(
                     body.dataDevolucao(),
                     body.valorTotal(),
@@ -85,13 +84,13 @@ public class EmprestimoController  {
                     0
                 )
             ));
-
+        
             var emprestimos = this.emprestimoService.getAllEmprestimos();
-            // emprestimos.get(0).getIdEmprestimo());
-            System.out.println("to aq");
+          
+            
             for (ItemEmprestimo item : itensEmprestimo) {
                 var livro = this.livroService.getLivroById(item.getLivro().getId());
-                System.out.println("opa");
+              
                 this.itemEmprestimoService.executeVoidFunctions("create", 0, new ItemEmprestimo(
                     item.getDataDevolucao(),
                     item.getDataPrevista(),
